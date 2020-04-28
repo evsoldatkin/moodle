@@ -500,6 +500,45 @@ class client extends \oauth2_client {
             return false;
         }
 
+        //Core Fix Start
+        if (isset($this->email))
+        {
+            $params = array(
+                'v' => '5.92',
+                'access_token' => $this->get_accesstoken()->token,
+                'user_ids' => $this->user_id
+            );
+            $response = $this->get($url, $params);
+            $response = json_decode($response);
+            if (isset($response->response[0]))
+            {
+                $response = $response->response[0];
+                $response->email = $this->email;
+                $response = json_encode($response);
+            }
+            else
+                $response = false;
+        }
+        elseif ($this->issuer->get('name') == 'Mail.ru')
+        {
+            $params = array(
+                'secure' => 1,
+                'app_id' => $this->get_clientid(),
+                'session_key' => $this->get_accesstoken()->token,
+                'sig' => md5('app_id='.$this->get_clientid().'method=users.getInfosecure=1session_key='.$this->get_accesstoken()->token.$this->get_clientsecret())
+            );
+            $response = $this->get($url, $params);
+            $response = json_decode($response);
+            if (isset($response[0]))
+            {
+                $response = $response[0];
+                $response = json_encode($response);
+            }
+            else
+                $response = false; 
+        }
+        else 
+        //Core Fix Finish
         $response = $this->get($url);
         if (!$response) {
             return false;

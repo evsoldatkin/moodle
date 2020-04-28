@@ -684,6 +684,10 @@ class course_modinfo {
         }
         // Set the accumulated activities and sections information in cache, together with cacherev.
         $cachecoursemodinfo->set_versioned($cachekey, $course->cacherev, $coursemodinfo);
+        //Core Fix Start
+        require_once $CFG->dirroot.'/local/core/config.php';
+        \local_core\Course::CacheReset($course->id);
+        //Core Fix Finish
         return $coursemodinfo;
     }
 
