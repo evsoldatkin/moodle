@@ -2910,7 +2910,10 @@ class assign {
             return $SESSION->mod_assign_useridlist[$useridlistkey];
         }
         $filter = get_user_preferences('assign_filter', '');
-        $table = new assign_grading_table($this, 0, $filter, 0, false);
+        //Core Fix Start
+        //$table = new assign_grading_table($this, 0, $filter, 0, false);
+        $table = new assign_grading_table($this, 0, null, 0, false);
+        //Core Fix Finish
 
         $useridlist = $table->get_column_data('userid');
 
@@ -4469,6 +4472,10 @@ class assign {
 
         require_once($CFG->dirroot . '/mod/assign/gradeform.php');
 
+        //Core Fix Start
+        require_once $CFG->dirroot.'/local/core/config.php';
+        if (!\local_core\User::SSupervisor())
+        //Core Fix Finish
         // Need submit permission to submit an assignment.
         require_capability('mod/assign:grade', $this->context);
 
@@ -6687,6 +6694,11 @@ class assign {
             return false;
         }
 
+        //Core Fix Start
+        global $CFG;
+        require_once $CFG->dirroot.'/local/core/config.php';
+        return \local_core\Fix::submissions_open($userid, $this->get_course()->id, $this->get_course_module()->id);
+        //Core Fix Finish
         return true;
     }
 
@@ -9579,6 +9591,12 @@ class assign {
                 $this->process_outcomes($member->id, $data, $userid);
             }
         } else {
+            //Core Fix Start                                                  
+            global $CFG;
+            require_once $CFG->dirroot.'/local/core/config.php';
+            if (\local_core\Fix::save_grade($this, $submission, $userid, $data->grade))
+                $data->grade = -1;
+            //Core Fix Finish
             $this->apply_grade_to_user($data, $userid, $data->attemptnumber);
 
             $this->process_outcomes($userid, $data);

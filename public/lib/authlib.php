@@ -1162,6 +1162,10 @@ function signup_validate_data($data, $files) {
     global $CFG, $DB;
 
     $errors = array();
+    //Core Fix Start
+    require_once $CFG->dirroot.'/local/core/config.php';
+    $data = \local_core\Fix::signup_validate_data($data);
+    //Core Fix Finish
     $authplugin = get_auth_plugin($CFG->registerauth);
 
     if ($DB->record_exists('user', array('username' => $data['username'], 'mnethostid' => $CFG->mnet_localhost_id))) {
@@ -1267,6 +1271,9 @@ function signup_setup_new_user($user) {
     // Initialize alternate name fields to empty strings.
     $namefields = array_diff(\core_user\fields::get_name_fields(), useredit_get_required_name_fields());
     foreach ($namefields as $namefield) {
+        //Core Fix Start
+        if (!isset($user->$namefield))
+        //Core Fix Finish
         $user->$namefield = '';
     }
     return $user;
