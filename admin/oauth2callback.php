@@ -34,6 +34,12 @@ require_once(__DIR__ . '/../config.php');
 // Per https://www.rfc-editor.org/rfc/rfc6749#section-4.1.2.1, state is required, even during error responses.
 $state = required_param('state', PARAM_LOCALURL);
 $redirecturl = new moodle_url($state);
+//Core Fix Start
+if ($sesskey = optional_param('sesskey', 0, PARAM_RAW))
+    $redirecturl->param('sesskey', $sesskey);
+if ($id = optional_param('id', 0, PARAM_INT))
+    $redirecturl->param('id', $id);
+//Core Fix Finish
 $params = $redirecturl->params();
 
 $error = optional_param('error', '', PARAM_RAW);
