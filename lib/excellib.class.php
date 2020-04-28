@@ -142,6 +142,17 @@ class MoodleExcelWorkbook {
         $objwriter = IOFactory::createWriter($this->objspreadsheet, $this->type);
         $objwriter->save('php://output');
     }
+    
+    //Core Fix Start
+    public function closefile(string $dir)
+    {
+        foreach ($this->objspreadsheet->getAllSheets() as $sheet)
+            $sheet->setSelectedCells('A1');
+        $this->objspreadsheet->setActiveSheetIndex(0);
+        $objwriter = IOFactory::createWriter($this->objspreadsheet, $this->type);
+        $objwriter->save($dir.'/'.$filename);
+    }
+    //Core Fix Finish
 
     /**
      * Not required to use.
