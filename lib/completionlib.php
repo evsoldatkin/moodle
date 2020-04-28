@@ -1021,6 +1021,11 @@ class completion_info {
             debugging('Deprecated argument passed to ' . __FUNCTION__, DEBUG_DEVELOPER);
         }
 
+        //Core Fix Start
+        global $CFG;
+        if (isset($CFG->disable_wholecourse_cache) && $CFG->disable_wholecourse_cache)
+            $wholecourse = false;
+        //Core Fix Finish
         $completioncache = cache::make('core', 'completion');
 
         // Get user ID
