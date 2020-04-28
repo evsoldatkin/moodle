@@ -526,6 +526,8 @@ class api {
                   FROM {message_conversations} mc
             INNER JOIN {message_conversation_members} mcm
                     ON (mcm.conversationid = mc.id AND mcm.userid = :userid3)
+            LEFT JOIN {message_conversation_actions} mca
+                   ON (mca.conversationid = mc.id AND mca.userid = :userid4 AND mca.action = :convaction)
             LEFT JOIN (
                           SELECT m.conversationid, MAX(m.id) AS messageid
                             FROM {messages} m
@@ -546,8 +548,6 @@ class api {
                     ON lastmessage.conversationid = mc.id
             LEFT JOIN {messages} m
                    ON m.id = lastmessage.messageid
-            LEFT JOIN {message_conversation_actions} mca
-                   ON (mca.conversationid = mc.id AND mca.userid = :userid4 AND mca.action = :convaction)
                 WHERE mc.id IS NOT NULL
                   AND mc.enabled = 1 $typesql $favouritesql
               ORDER BY (CASE WHEN m.timecreated IS NULL THEN 0 ELSE 1 END) DESC, m.timecreated DESC, id DESC";
