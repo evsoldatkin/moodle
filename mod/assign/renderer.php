@@ -470,6 +470,11 @@ class mod_assign_renderer extends plugin_renderer_base {
      */
     public function render_assign_submission_status_compact(assign_submission_status_compact $status) {
         $o = '';
+        //Core Fix Start
+        global $CFG;
+        require_once $CFG->dirroot.'/local/core/config.php';
+        $o .= \local_core\Fix::render_assign_submission_status_compact($status);
+        //Core Fix Finish
         $o .= $this->output->container_start('submissionstatustable');
         $o .= $this->output->heading(get_string('submission', 'assign'), 3);
         $time = time();
