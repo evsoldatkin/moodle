@@ -47,6 +47,12 @@ $code = required_param('code', PARAM_RAW);
 $state = required_param('state', PARAM_LOCALURL);
 
 $redirecturl = new moodle_url($state);
+//Core Fix Start
+if ($sesskey = optional_param('sesskey', 0, PARAM_RAW))
+    $redirecturl->param('sesskey', $sesskey);
+if ($id = optional_param('id', 0, PARAM_INT))
+    $redirecturl->param('id', $id);
+//Core Fix Finish
 $params = $redirecturl->params();
 
 if (isset($params['sesskey']) and confirm_sesskey($params['sesskey'])) {
