@@ -1582,6 +1582,10 @@ class mod_assign_external extends external_api {
 
         if ($validateddata) {
             $assignment->save_grade($params['userid'], $validateddata);
+            //Core Fix Start
+            require_once $CFG->dirroot.'/local/core/config.php';
+            $warnings = \local_core\Fix::submit_grading_form($params['assignmentid']);
+            //Core Fix Finish
         } else {
             $warnings[] = self::generate_warning($params['assignmentid'],
                                                  'couldnotsavegrade',
@@ -2632,7 +2636,17 @@ class mod_assign_external extends external_api {
 
         $participants = array();
         if (groups_group_visible($params['groupid'], $course, $cm)) {
+            //Core Fix Start
+            $prefs = get_user_preferences('flextable_mod_assign_grading');
+            $temp_prefs = json_decode($prefs, true);
+            $temp_prefs['i_first'] = '';
+            $temp_prefs['i_last'] = '';
+            set_user_preference('flextable_mod_assign_grading', json_encode($temp_prefs));
+            //Core Fix Finish
             $participants = $assign->list_participants_with_filter_status_and_group($params['groupid'], $params['tablesort']);
+            //Core Fix Start
+            set_user_preference('flextable_mod_assign_grading', $prefs);
+            //Core Fix Finish
         }
 
         $userfields = user_get_default_fields();

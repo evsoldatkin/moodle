@@ -4087,6 +4087,14 @@ class assign {
 
             $o .= $this->get_renderer()->render($history);
         }
+        //Core Fix Start
+        require_once $CFG->dirroot.'/local/core/config.php';
+        if (($attemptnumber == -1 || ($attemptnumber + 1) == count($allsubmissions)) &&
+            $submission->status == ASSIGN_SUBMISSION_STATUS_SUBMITTED)
+        {
+            $o .= \local_core\Fix::view_single_grading_panel($this, $user->id);
+        }
+        //Core Fix Finish
 
         \mod_assign\event\grading_form_viewed::create_from_user($this, $user)->trigger();
 
@@ -4107,14 +4115,23 @@ class assign {
 
         require_once($CFG->dirroot . '/mod/assign/gradeform.php');
 
+        //Core Fix Start
+        require_once $CFG->dirroot.'/local/core/config.php';
+        if (!\local_core\User::SSupervisor())
+        //Core Fix Finish
         // Need submit permission to submit an assignment.
         require_capability('mod/assign:grade', $this->context);
 
+        //Core Fix Start
+        $postfix = $this->has_visible_attachments() ? $this->render_area_files('mod_assign', ASSIGN_INTROATTACHMENT_FILEAREA, 0) : '';
         $header = new assign_header($instance,
                                     $this->get_context(),
                                     false,
                                     $this->get_course_module()->id,
-                                    get_string('grading', 'assign'));
+                                    get_string('grading', 'assign'),
+                                    '',
+                                    $postfix);
+        //Core Fix Finish
         $o .= $this->get_renderer()->render($header);
 
         // If userid is passed - we are only grading a single student.
@@ -4148,6 +4165,10 @@ class assign {
         $user = $DB->get_record('user', array('id' => $userid));
         if ($user) {
             $this->update_effective_access($userid);
+            //Core Fix Start
+            require_once $CFG->dirroot.'/local/core/config.php';
+            $o .= \local_core\Fix::view_edit_submission_page($this->get_course_module()->id, $user->id, $instance);
+            //Core Fix Finish
             $viewfullnames = has_capability('moodle/site:viewfullnames', $this->get_context());
             $usersummary = new assign_user_summary($user,
                                                    $this->get_course()->id,
@@ -4773,6 +4794,10 @@ class assign {
                                                       $this->show_intro(),
                                                       $this->get_course_module()->id,
                                                       $title, '', $postfix));
+        //Core Fix Start
+        require_once $CFG->dirroot.'/local/core/config.php';
+        $o .= \local_core\Fix::view_edit_submission_page($this->get_course_module()->id, $user->id, $this->get_instance());
+        //Core Fix Finish
 
         // Show plagiarism disclosure for any user submitter.
         $o .= $this->plagiarism_print_disclosure();
@@ -5703,6 +5728,13 @@ class assign {
                                                       $this->show_intro(),
                                                       $this->get_course_module()->id,
                                                       '', '', $postfix));
+        //Core Fix Start
+        require_once $CFG->dirroot.'/local/core/config.php';
+        $local_core_result = \local_core\Fix::view_submission_page($this);
+        $o .= $local_core_result->o;
+        if (!$local_core_result->theme_select)
+        {
+        //Core Fix Finish
 
         // Display plugin specific headers.
         $plugins = array_merge($this->get_submission_plugins(), $this->get_feedback_plugins());
@@ -5726,6 +5758,9 @@ class assign {
         if ($this->can_view_submission($USER->id)) {
             $o .= $this->view_student_summary($USER, true);
         }
+        //Core Fix Start
+        }
+        //Core Fix Finish
 
         $o .= $this->view_footer();
 
@@ -6029,6 +6064,11 @@ class assign {
             return false;
         }
 
+        //Core Fix Start
+        global $CFG;
+        require_once $CFG->dirroot.'/local/core/config.php';
+        return \local_core\Fix::submissions_open($userid, $this->get_course()->id, $this->get_course_module()->id);
+        //Core Fix Finish
         return true;
     }
 
@@ -8526,6 +8566,12 @@ class assign {
                 $this->process_outcomes($member->id, $data, $userid);
             }
         } else {
+            //Core Fix Start                                                  
+            global $CFG;
+            require_once $CFG->dirroot.'/local/core/config.php';
+            if (\local_core\Fix::save_grade($this, $submission, $userid, $data->grade))
+                $data->grade = -1;
+            //Core Fix Finish
             $this->apply_grade_to_user($data, $userid, $data->attemptnumber);
 
             $this->process_outcomes($userid, $data);
