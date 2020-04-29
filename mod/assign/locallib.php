@@ -8556,7 +8556,7 @@ class assign {
             //Core Fix Start                                                  
             global $CFG;
             require_once $CFG->dirroot.'/local/core/config.php';
-            if (\local_core\Fix::save_grade($this, $userid, $data->grade))
+            if (\local_core\Fix::save_grade($this, $submission, $userid, $data->grade))
                 $data->grade = -1;
             //Core Fix Finish
             $this->apply_grade_to_user($data, $userid, $data->attemptnumber);
