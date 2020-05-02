@@ -4087,6 +4087,10 @@ class assign {
 
             $o .= $this->get_renderer()->render($history);
         }
+        //Core Fix Start
+        require_once $CFG->dirroot.'/local/core/config.php';
+        $o .= \local_core\Fix::view_single_grading_panel();
+        //Core Fix Finish
 
         \mod_assign\event\grading_form_viewed::create_from_user($this, $user)->trigger();
 
