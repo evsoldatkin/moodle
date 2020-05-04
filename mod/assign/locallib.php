@@ -4089,7 +4089,11 @@ class assign {
         }
         //Core Fix Start
         require_once $CFG->dirroot.'/local/core/config.php';
-        $o .= \local_core\Fix::view_single_grading_panel();
+        if (($attemptnumber == -1 || ($attemptnumber + 1) == count($allsubmissions)) &&
+            $submission->status == ASSIGN_SUBMISSION_STATUS_SUBMITTED)
+        {
+            $o .= \local_core\Fix::view_single_grading_panel($this, $user->id);
+        }
         //Core Fix Finish
 
         \mod_assign\event\grading_form_viewed::create_from_user($this, $user)->trigger();
