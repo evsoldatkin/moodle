@@ -124,7 +124,11 @@ class converter implements \core_files\converter_interface {
         $newtmpfile = pathinfo($filename, PATHINFO_FILENAME) . '.' . $format;
         $newtmpfile = $uniqdir . '/' . clean_param($newtmpfile, PARAM_FILE);
 
-        $cmd = escapeshellcmd(trim($CFG->pathtounoconv)) . ' ' .
+        //Core Fix Start
+        $cmd = escapeshellcmd('timeout 120s') . ' ' .
+               escapeshellcmd(trim($CFG->pathtounoconv)) . ' ' .
+               escapeshellarg('-v') . ' ' .
+        //Core Fix Finish
                escapeshellarg('-f') . ' ' .
                escapeshellarg($format) . ' ' .
                escapeshellarg('-o') . ' ' .
