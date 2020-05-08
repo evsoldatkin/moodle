@@ -305,6 +305,9 @@ if (empty($SESSION->wantsurl)) {
             strpos($referer, $CFG->wwwroot . '/login/index.php') !== 0) { // There might be some extra params such as ?lang=.
         $SESSION->wantsurl = $referer;
     }
+    //Core Fix Start
+    $SESSION->wantsurl = (new moodle_url('/my/'))->out(false);
+    //Core Fix Finish
 }
 
 /// Redirect to alternative login URL if needed

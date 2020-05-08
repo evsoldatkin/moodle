@@ -80,7 +80,7 @@ $lesson->add_messages_on_page_process($page, $result, $reviewmode);
 $PAGE->set_url('/mod/lesson/view.php', array('id' => $cm->id, 'pageid' => $page->id));
 $PAGE->set_subpage($page->id);
 //Core Fix Start
-$PAGE->requires->js_init_code('document.addEventListener("DOMContentLoaded", function(event) {setTimeout(function(){window.scrollTo(0,document.body.scrollHeight);}, 500);});');
+$PAGE->requires->js_init_code('document.addEventListener("DOMContentLoaded", function(event) {setTimeout(function(){var el = document.getElementsByClassName("k-collapse")[0];el.scrollIntoView(true);}, 500);});');
 //Core Fix Finish
 
 /// Print the header, heading and tabs
