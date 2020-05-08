@@ -1,4 +1,12 @@
 <?php
+//Core Fix Start
+$landing = 'index_land.php';
+if (file_exists('./'.$landing))
+{
+    include $landing;
+    die;
+}
+//Core Fix Finish
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify

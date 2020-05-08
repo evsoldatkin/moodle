@@ -3027,7 +3027,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
     }
 
     // Check visibility of activity to current user; includes visible flag, conditional availability, etc.
-    if ($cm && !$cm->uservisible) {
+    if ($cm && !$cm->uservisible/*Core Fix Start*/ && $cm->modname != 'lesson' && !optional_param('share', false, PARAM_BOOL)/*Core Fix Finish*/) {
         if ($preventredirect) {
             throw new require_login_exception('Activity is hidden');
         }
@@ -10351,7 +10351,7 @@ function mnet_get_idp_jump_url($user) {
 function get_home_page() {
     global $CFG;
 
-    if (isloggedin() && !isguestuser() && !empty($CFG->defaulthomepage)) {
+    if (isloggedin()/*Core Fix Start*//* && !isguestuser()*//*Core Fix Finish*/ && !empty($CFG->defaulthomepage)) {
         if ($CFG->defaulthomepage == HOMEPAGE_MY) {
             return HOMEPAGE_MY;
         } else {

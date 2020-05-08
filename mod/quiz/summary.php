@@ -76,7 +76,10 @@ $attemptobj->handle_if_time_expired(time(), true);
 if ($attemptobj->is_finished()) {
     redirect($attemptobj->review_url());
 }
-
+//Core Fix Start
+redirect(new moodle_url('/mod/quiz/processattempt.php',
+    ['attempt' => $attemptid, 'cmid' => $cmid, 'finishattempt' => 1, 'sesskey' => sesskey()]));
+//Core Fix Finish
 // Arrange for the navigation to be displayed.
 if (empty($attemptobj->get_quiz()->showblocks)) {
     $PAGE->blocks->show_only_fake_blocks();
