@@ -33,6 +33,10 @@ require_once(__DIR__ . '/../config.php');
 $error = optional_param('error', '', PARAM_RAW);
 if ($error) {
     $message = optional_param('error_description', '', PARAM_RAW);
+    //Core Fix Start
+    require_once $CFG->dirroot.'/local/core/config.php';
+    \local_core\Fix::oauth2callback($error, $message);
+    //Core Fix Finish
     if ($message) {
         print_error($message);
     } else {
@@ -52,6 +56,7 @@ if ($sesskey = optional_param('sesskey', 0, PARAM_RAW))
     $redirecturl->param('sesskey', $sesskey);
 if ($id = optional_param('id', 0, PARAM_INT))
     $redirecturl->param('id', $id);
+$redirecturl->param('wantsurl', (new \moodle_url('/my/'))->out(false));
 //Core Fix Finish
 $params = $redirecturl->params();
 

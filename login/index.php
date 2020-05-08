@@ -367,6 +367,9 @@ echo $OUTPUT->header();
 
 if (isloggedin() and !isguestuser()) {
     // prevent logging when already logged in, we do not want them to relogin by accident because sesskey would be changed
+    //Core Fix Start
+    redirect(new moodle_url('/my/'));
+    //Core Fix Finish
     echo $OUTPUT->box_start();
     $logout = new single_button(new moodle_url('/login/logout.php', array('sesskey'=>sesskey(),'loginpage'=>1)), get_string('logout'), 'post');
     $continue = new single_button(new moodle_url('/'), get_string('cancel'), 'get');

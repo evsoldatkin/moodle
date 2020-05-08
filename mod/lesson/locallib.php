@@ -3301,6 +3301,10 @@ class lesson extends lesson_base {
                 $attempt = false;
             }
             $lessoncontent = $lessonoutput->display_page($this, $page, $attempt);
+            //Core Fix Start
+            require_once $CFG->dirroot.'/local/core/config.php';
+            $lessoncontent .= \local_core\Fix::lesson_footer($this, $page);
+            //Core Fix Finish
         } else {
             require_once($CFG->dirroot . '/mod/lesson/view_form.php');
             $data = new stdClass;
@@ -4302,6 +4306,40 @@ abstract class lesson_page extends lesson_base {
                 $result->feedback .= html_writer::table($table).'</div></div>';
             }
         }
+        //Core Fix Start
+        global $CFG;
+        require_once $CFG->dirroot.'/local/core/config.php';
+        $data = new \stdClass();
+        $data->answers = [];
+        if ($this->properties->qoption)
+        {
+            $data->singleanswer = false;
+            $useranswer = explode(',', $attempt->useranswer);
+        }
+        else
+        {
+            $data->singleanswer = true;
+            $useranswer = [$result->answerid];
+        }
+        $data->response = $result->response;
+        $data->correct = $result->correctanswer;
+        foreach ($this->answers as $answer)
+        {
+            $correct = $answer->score == 1;
+            $data->answers[] = [
+                'id' => $answer->id,
+                'name' => $answer->answer,
+                'checked' => in_array($answer->id, $useranswer),
+                'correct' => $correct
+            ];
+            if (!$data->singleanswer && ($correct && $result->correctanswer) || (!$correct && !$result->correctanswer))
+                $data->response = $answer->response;
+        }
+        $content = format_text($this->get_contents(), $this->properties->contentsformat, $options);
+        $result->feedback = $OUTPUT->box($content, 'generalbox boxaligncenter p-y-1').
+            $OUTPUT->render_from_template('theme_kaspersky/lesson-question', $data).
+            \local_core\Fix::lesson_footer($this->get_lesson(), $this);
+        //Core Fix Finish
         return $result;
     }
 
