@@ -4334,12 +4334,12 @@ abstract class lesson_page extends lesson_base {
             $correct = $answer->score == 1;
             $data->answers[] = [
                 'id' => $answer->id,
-                'name' => $answer->answer,
+                'name' => str_replace(["\r\n", "\n", "\r"], '', $answer->answer),
                 'checked' => in_array($answer->id, $useranswer),
                 'correct' => $correct
             ];
             if (!$data->singleanswer && ($correct && $result->correctanswer) || (!$correct && !$result->correctanswer))
-                $data->response = $answer->response;
+                $data->response = str_replace(["\r\n", "\n", "\r"], '', $answer->response);
         }
         $content = format_text($this->get_contents(), $this->properties->contentsformat, $options);
         $result->feedback = $OUTPUT->box($content, 'generalbox boxaligncenter p-y-1').
