@@ -4137,12 +4137,14 @@ abstract class lesson_page extends lesson_base {
 
                 // Check if they have reached (or exceeded) the maximum number of attempts allowed.
                 //Core Fix Start
+                /*
                 if ($nattempts >= $this->lesson->maxattempts) {
                     $result->maxattemptsreached = true;
                     $result->feedback = get_string('maximumnumberofattemptsreached', 'lesson');
                     $result->newpageid = $this->lesson->get_next_page($this->properties->nextpageid);
                     return $result;
                 }
+                */
                 //Core Fix Finish
 
                 // record student's attempt
