@@ -4317,7 +4317,7 @@ abstract class lesson_page extends lesson_base {
             }
         }
         //Core Fix Start
-        global $CFG;
+        global $CFG, $SESSION;
         require_once $CFG->dirroot.'/local/core/config.php';
         $data = new \stdClass();
         $data->answers = [];
@@ -4336,7 +4336,7 @@ abstract class lesson_page extends lesson_base {
         foreach ($this->answers as $answer)
         {
             $correct = $answer->score == 1;
-            $data->answers[] = [
+            $data->answers[$answer->id] = [
                 'id' => $answer->id,
                 'name' => str_replace(["\r\n", "\n", "\r"], ' ', $answer->answer),
                 'checked' => in_array($answer->id, $useranswer),
@@ -4344,6 +4344,13 @@ abstract class lesson_page extends lesson_base {
             ];
             if (!$data->singleanswer && ($correct && $result->correctanswer) || (!$correct && !$result->correctanswer))
                 $data->response = str_replace(["\r\n", "\n", "\r"], ' ', $answer->response);
+        }
+        if (isset($SESSION->core_mod_lesson[$this->properties->id]))
+        {
+            $tmp_answers = [];
+            foreach ($SESSION->core_mod_lesson[$this->properties->id] as $answerid)
+                $tmp_answers[] = $data->answers[$answerid];
+            $data->answers = $tmp_answers;
         }
         $content = format_text(str_replace(["\r\n", "\n", "\r"], ' ', $this->get_contents()), $this->properties->contentsformat, $options);
         $result->feedback = $OUTPUT->box($content, 'generalbox boxaligncenter p-y-1').

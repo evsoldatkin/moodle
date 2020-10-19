@@ -88,6 +88,14 @@ class lesson_page_type_multichoice extends lesson_page {
         global $CFG, $PAGE;
         $answers = $this->get_used_answers();
         shuffle($answers);
+        //Core Fix Start
+        global $SESSION;
+        if (!isset($SESSION->core_mod_lesson))
+            $SESSION->core_mod_lesson = [];
+        $SESSION->core_mod_lesson[$this->id] = [];
+        foreach ($answers as $answer)
+            $SESSION->core_mod_lesson[$this->id][] = $answer->properties->id;
+        //Core Fix Finish
         $action = $CFG->wwwroot.'/mod/lesson/continue.php';
         $params = array('answers'=>$answers, 'lessonid'=>$this->lesson->id, 'contents'=>$this->get_contents(), 'attempt'=>$attempt);
         if ($this->properties->qoption) {
