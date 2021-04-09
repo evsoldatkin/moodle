@@ -20,6 +20,7 @@
 *~
 #
 /config.php
+/sitemap.xml
 /lib/editor/tinymce/extra/tools/temp/
 /tags
 /TAGS
@@ -46,4 +47,4 @@ composer.phar
 atlassian-ide-plugin.xml
 /node_modules/
 /.vscode/
-/sitemap.xml
+moodle-plugin-ci.phar
