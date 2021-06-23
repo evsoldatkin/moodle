@@ -49,3 +49,5 @@ atlassian-ide-plugin.xml
 /.vscode/
 moodle-plugin-ci.phar
 /sitemap.xml
+.eslintignore
+.stylelintignore
