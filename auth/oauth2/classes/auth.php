@@ -510,16 +510,17 @@ class auth extends \auth_plugin_base {
         if (!$userwasmapped) {
             // No defined mapping - we need to see if there is an existing account with the same email.
 
-            $moodleuser = \core_user::get_user_by_email($userinfo['email']);
             //Core Fix Start
-            if (!$moodleuser && isset($userinfo['idnumber']->id) && $userinfo['idnumber']->id != '')
+            if (isset($userinfo['idnumber']->id) && $userinfo['idnumber']->id != '')
             {
                 global $DB;
                 $moodleuser = $DB->get_record('user', ['idnumber' => $userinfo['idnumber']->id]);
                 if ($moodleuser)
                     $issuer->set('requireconfirmation', false);
             }
+            else
             //Core Fix Finish
+            $moodleuser = \core_user::get_user_by_email($userinfo['email']);
             if (!empty($moodleuser)) {
                 if ($issuer->get('requireconfirmation')) {
                     $PAGE->set_url('/auth/oauth2/confirm-link-login.php');
