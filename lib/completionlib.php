@@ -1008,6 +1008,11 @@ class completion_info {
      */
     public function get_data($cm, $wholecourse = false, $userid = 0, $modinfo = null) {
         global $USER, $DB;
+        //Core Fix Start
+        global $CFG;
+        if (isset($CFG->disable_wholecourse_cache) && $CFG->disable_wholecourse_cache)
+            $wholecourse = false;
+        //Core Fix Finish
         $completioncache = cache::make('core', 'completion');
 
         // Get user ID
