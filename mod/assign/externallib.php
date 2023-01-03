@@ -2667,7 +2667,7 @@ class mod_assign_external extends \mod_assign\external\external_api {
             $temp_prefs = json_decode($prefs, true);
             $temp_prefs['i_first'] = '';
             $temp_prefs['i_last'] = '';
-            set_user_preference('flextable_mod_assign_grading', json_encode($temp_prefs));
+            set_user_preference('flextable_mod_assign_grading'.'-'.$context->id, json_encode($temp_prefs));
             //Core Fix Finish
             $participants = $assign->list_participants_with_filter_status_and_group($params['groupid'], $params['tablesort']);
             //Core Fix Start
