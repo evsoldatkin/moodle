@@ -2663,7 +2663,7 @@ class mod_assign_external extends \mod_assign\external\external_api {
         $participants = array();
         if (groups_group_visible($params['groupid'], $course, $cm)) {
             //Core Fix Start
-            $prefs = get_user_preferences('flextable_mod_assign_grading');
+            $prefs = get_user_preferences('flextable_mod_assign_grading'.'-'.$context->id);
             $temp_prefs = json_decode($prefs, true);
             $temp_prefs['i_first'] = '';
             $temp_prefs['i_last'] = '';
