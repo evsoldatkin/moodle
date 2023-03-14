@@ -2664,14 +2664,18 @@ class mod_assign_external extends \mod_assign\external\external_api {
         if (groups_group_visible($params['groupid'], $course, $cm)) {
             //Core Fix Start
             $prefs = get_user_preferences('flextable_mod_assign_grading'.'-'.$context->id);
-            $temp_prefs = json_decode($prefs, true);
-            $temp_prefs['i_first'] = '';
-            $temp_prefs['i_last'] = '';
-            set_user_preference('flextable_mod_assign_grading'.'-'.$context->id, json_encode($temp_prefs));
+            if ($prefs)
+            {
+                $temp_prefs = json_decode($prefs, true);
+                $temp_prefs['i_first'] = '';
+                $temp_prefs['i_last'] = '';
+                set_user_preference('flextable_mod_assign_grading'.'-'.$context->id, json_encode($temp_prefs));
+            }
             //Core Fix Finish
             $participants = $assign->list_participants_with_filter_status_and_group($params['groupid'], $params['tablesort']);
             //Core Fix Start
-            set_user_preference('flextable_mod_assign_grading', $prefs);
+            if ($prefs)
+                set_user_preference('flextable_mod_assign_grading', $prefs);
             //Core Fix Finish
         }
 
