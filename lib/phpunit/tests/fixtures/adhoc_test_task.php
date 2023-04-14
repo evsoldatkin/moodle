@@ -14,17 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core_phpunit;
+
 /**
- * Label module version info
+ * Fixtures for task tests.
  *
- * @package mod_label
- * @copyright  2003 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @package    core
+ * @category   phpunit
+ * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->version   = 2022112801;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires  = 2022111800;    // Requires this Moodle version.
-$plugin->component = 'mod_label'; // Full name of the plugin (used for diagnostics)
-$plugin->cron      = 0;
+class adhoc_test_task extends \core\task\adhoc_task {
+    /**
+     * Execute.
+     */
+    public function execute() {
+        global $USER;
+        mtrace("Task was run as {$USER->id}");
+    }
+}
