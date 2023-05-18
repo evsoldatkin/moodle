@@ -72,7 +72,7 @@ abstract class base {
      * @throws \coding_exception
      * @return void
      */
-    public /*Core Fix Start*//*final*//*Core Fix Finish*/ function __construct() {
+    public function __construct() {
 
         $classname = get_class($this);
 
