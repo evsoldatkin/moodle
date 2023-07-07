@@ -23284,8 +23284,15 @@ form.popupform div {
 }
 
 .no-overflow > .generaltable {
-  position: relative;
   margin-bottom: 0;
+}
+
+.no-overflow .generaltable .sr-only,
+.no-overflow .generaltable .accesshide,
+.table-responsive .generaltable .sr-only,
+.table-responsive .generaltable .accesshide {
+  position: relative;
+  display: block;
 }
 
 .accesshide {
@@ -33793,8 +33800,8 @@ img.userpicture {
 }
 
 #page-mod-quiz-edit ul.slots li.section li.activity .instancemaxmarkcontainer {
-  padding: 0;
-  margin: 0 0.4em;
+  padding: 0.5em 0 0.5em 0.1em;
+  margin: 2px;
 }
 
 /* Countdown timer. */
