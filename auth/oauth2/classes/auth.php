@@ -413,6 +413,10 @@ class auth extends \auth_plugin_base {
 
         $rawuserinfo = $client->get_raw_userinfo();
         $userinfo = $client->get_userinfo();
+        //Core Fix Start
+        if ($client->get_issuer()->get('name') == 'sportacadem' && empty($userinfo['email']))
+            $userinfo['email'] = $userinfo['username'].'@sportacadem.ru';
+        //Core Fix Finish
 
         if (!$userinfo) {
             // Trigger login failed event.

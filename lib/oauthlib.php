@@ -638,6 +638,10 @@ abstract class oauth2_client extends curl {
             } else {
                 $this->setHeader('Authorization: Bearer '.$this->accesstoken->token);
             }
+            //Core Fix Start
+            if ($this->get_issuer()->get('name') == 'sportacadem')
+                $murl->param('access_token', $this->accesstoken->token);
+            //Core Fix Finish
         }
 
         if ($acceptheader) {
