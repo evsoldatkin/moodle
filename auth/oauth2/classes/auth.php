@@ -529,6 +529,10 @@ class auth extends \auth_plugin_base {
             // No defined mapping - we need to see if there is an existing account with the same email.
 
             $moodleuser = \core_user::get_user_by_email($userinfo['email']);
+            //Core Fix Start
+            if ($client->get_issuer()->get('name') == 'sportacadem')
+                $moodleuser = \core_user::get_user_by_username($userinfo['username']);
+            //Core Fix Finish
             if (!empty($moodleuser)) {
                 if ($issuer->get('requireconfirmation')) {
                     $PAGE->set_url('/auth/oauth2/confirm-link-login.php');
