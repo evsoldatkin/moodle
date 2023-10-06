@@ -3303,5 +3303,17 @@ privatefiles,moodle|/user/files.php';
         upgrade_main_savepoint(true, 2023042402.03);
     }
 
+    if ($oldversion < 2023042402.11) {
+        upgrade_core_licenses();
+        upgrade_main_savepoint(true, 2023042402.11);
+    }
+
+    if ($oldversion < 2023042402.14) {
+        // Delete datakey with datavalue -1.
+        $DB->delete_records('messageinbound_datakeys', ['datavalue' => '-1']);
+        // Main savepoint reached.
+        upgrade_main_savepoint(true, 2023042402.14);
+    }
+
     return true;
 }
