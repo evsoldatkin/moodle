@@ -32252,7 +32252,8 @@ body.path-question-type .form-group .col-form-label.sr-only:not(legend):not([for
   max-width: inherit;
 }
 
-.path-mod-quiz input[size] {
+.que input[size],
+.que textarea[cols] {
   width: auto;
   max-width: 100%;
 }
@@ -38664,6 +38665,10 @@ div.editor_atto_toolbar button .icon {
   position: absolute;
   left: 0.4rem;
   font-size: 0.7rem;
+}
+
+.dropdown-menu {
+  width: fit-content;
 }
 
 .dropdown-item.text-primary {
