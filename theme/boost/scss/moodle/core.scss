@@ -414,9 +414,20 @@ form.popupform div {
 
 // Position required for table sizing inside a flex container.
 .no-overflow > .generaltable {
-    position: relative;
     margin-bottom: 0;
 }
+
+.no-overflow,
+.table-responsive {
+    .generaltable {
+        .sr-only,
+        .accesshide {
+            position: relative;
+            display: block;
+        }
+    }
+}
+
 // Accessibility features
 
 // Accessibility: text 'seen' by screen readers but not visual users.
@@ -2076,7 +2087,7 @@ a.disabled {
     text-decoration: none;
     cursor: default;
     font-style: italic;
-    color: #808080;
+    color: $text-muted;
 }
 
 body.lockscroll {
@@ -2197,12 +2208,6 @@ h3.sectionname .inplaceeditable.inplaceeditingon .editinstructions {
             }
         }
     }
-}
-
-// Reset for ul.
-ul {
-    padding-left: 1rem;
-    -webkit-margin-start: 0.2rem;  /* stylelint-disable-line */
 }
 
 /* YUI 2 Tree View */
@@ -2408,6 +2413,10 @@ $footer-link-color: $bg-inverse-link-color !default;
             font-size: 0.7rem;
         }
     }
+}
+
+.dropdown-menu {
+    width: fit-content;
 }
 
 .competency-tree {

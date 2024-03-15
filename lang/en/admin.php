@@ -114,6 +114,7 @@ $string['calendarsettings'] = 'Calendar';
 $string['calendartype'] = 'Calendar type';
 $string['calendartype_desc'] = 'Choose a default calendar type for the whole site. This setting can be overridden in the course settings or by users in their personal profile.';
 $string['calendar_weekend'] = 'Weekend days';
+$string['campaign'] = 'Campaign';
 $string['cannotdeletemodfilter'] = 'You cannot uninstall the \'{$a->filter}\' because it is part of the \'{$a->module}\' module.';
 $string['cannotuninstall'] = '{$a} can not be uninstalled.';
 $string['categoryemail'] = 'Email';
@@ -383,7 +384,7 @@ $string['configstripalltitletags'] = 'Uncheck this setting to allow HTML tags in
 $string['configsupportavailability'] = 'Determines who has access to contact site support from the footer.';
 $string['configsupportemail'] = 'If SMTP is configured on this site and a support page is not set, this email address will receive messages submitted through the support form. If sending fails, the email address will be displayed to logged-in users.';
 $string['configsupportname'] = 'The name of the person or other entity providing support via the support form or support page.';
-$string['configsupportpage'] = 'Enter the URL of a support page or leave empty to link to a contact form.';
+$string['configsupportpage'] = 'Enter the URL of a support page or leave empty to link to a contact form. The link is displayed in the site footer.';
 $string['configtempdatafoldercleanup'] = 'Remove temporary data files from the data folder that are older than the selected time.';
 $string['configthemedesignermode'] = 'Normally all theme images and style sheets are cached in browsers and on the server for a very long time, for performance. If you are designing themes or developing code then you probably want to turn this mode on so that you are not served cached versions.  Warning: this will make your site slower for all users!  Alternatively, you can also reset the theme caches manually from the Theme selection page.';
 $string['configthemelist'] = 'Leave this blank to allow any valid theme to be used.  If you want to shorten the theme menu, you can specify a comma-separated list of names here (Don\'t use spaces!).
@@ -467,6 +468,7 @@ $string['customusermenuitems'] = 'User menu items';
 $string['datarootsecurityerror'] = '<p><strong>SECURITY WARNING!</strong></p><p>Your dataroot directory is in the wrong location and is exposed to the web. This means that all your private files are available to anyone in the world, and some of them could be used by a cracker to obtain unauthorised administrative access to your site!</p>
 <p>You <em>must</em> move dataroot directory ({$a}) to a new location that is not within your public web directory, and update the <code>$CFG->dataroot</code> setting in your config.php accordingly.</p>';
 $string['datarootsecuritywarning'] = 'Your site configuration might not be secure. Please make sure that your dataroot directory ({$a}) is not directly accessible via web.';
+$string['dbprefixtoolong'] = 'Your site\'s database prefix ($CFG->prefix) is too long ({$a->current} characters). The maximum number of characters allowed is {$a->maximum}.';
 $string['dbsessions'] = 'Use database for session information';
 $string['debug'] = 'Debug messages';
 $string['debugall'] = 'ALL: Show all reasonable PHP debug messages';
@@ -606,11 +608,11 @@ $string['environmentrequireversion'] = 'version {$a->needed} is required and you
 $string['environmentsettingok'] = 'recommended setting detected';
 $string['environmentshouldfixsetting'] = 'PHP setting should be changed.';
 $string['environmentxmlerror'] = 'Error reading environment data ({$a->error_code})';
-$string['environmentmariadbwrongdbtype'] = 'Wrong <code>$CFG->dbtype</code>: you need to change it in your <code>config.php</code> file, from \'<code>mysql</code>\' to \'<code>mariadb</code>\'.';
+$string['environmentmariadbwrongdbtype'] = 'Wrong $CFG->dbtype. You need to change it in your config.php file from \'mysqli\' to \'mariadb\'.';
 $string['errordeletingconfig'] = 'An error occurred while deleting the configuration records for plugin \'{$a}\'.';
 $string['errorsetting'] = 'Could not save setting:';
 $string['errorwithsettings'] = 'Some settings were not changed due to an error.';
-$string['eventshandlersinuse'] = 'The following plugins in your system are using Events 1 API deprecated handlers: \'{$a}\'. Please, update them to use Events 2 API. See https://docs.moodle.org/dev/Event_2#Event_dispatching_and_observers.';
+$string['eventshandlersinuse'] = 'The following plugins in your system are using Events 1 API deprecated handlers: \'{$a}\'. Please, update them to use Events 2 API. See https://docs.moodle.org/dev/Events_API#Event_dispatching_and_observers.';
 $string['everyonewhocan'] = 'Everyone who can \'{$a}\'';
 $string['exceptions'] = 'exceptions';
 $string['execpathnotallowed'] = 'Setting executable and local paths disabled in config.php';
@@ -724,9 +726,8 @@ $string['ipblocker'] = 'IP blocker';
 $string['ipblockersyntax'] = 'Put every entry on one line. Valid entries are either full IP address (such as <b>192.168.10.1</b>) which matches a single host; or partial address (such as <b>192.168</b>) which matches any address starting with those numbers; or CIDR notation (such as <b>231.54.211.0/20</b>); or a range of IP addresses (such as <b>231.3.56.10-20</b>) where the range applies to the last part of the address. Text domain names (like \'example.com\') are not supported. Blank lines, and text following a "#" character are ignored.';
 $string['iplookup'] = 'IP address lookup';
 $string['iplookupgeoplugin'] = 'The <a href="https://www.geoplugin.com">geoPlugin</a> service is currently being used to look up geographical information. For more accurate results we recommend installing a local copy of the MaxMind GeoLite database.';
-$string['iplookupinfo'] = 'By default Moodle uses the free online NetGeo (The Internet Geographic Database) server to lookup location of IP addresses, unfortunately this database is not maintained anymore and may return <em>wildly incorrect</em> data.
-It is recommended to install local copy of free GeoLite2 City database from MaxMind.<br />
-IP address location is displayed on simple map or using Google Maps. Please note that you need to have a Google account and apply for free Google Maps API key to enable interactive maps.';
+$string['iplookupinfo'] = 'The free online NetGeo server is used to look up IP address locations. The database is not maintained any more though, and may return incorrect data. Installing a local copy of the free GeoLite2 City database from MaxMind is recommended.<br />
+If a Google Maps API V3 key is provided, IP address location is displayed using Google Maps. You need a Google account and to apply for a Google Maps API key. If no Google Maps API V3 key is provided, IP address location is displayed using OpenStreetMap.';
 $string['iplookupmaxmindnote'] = 'This product includes GeoLite2 data created by MaxMind, available from <a href="https://www.maxmind.com">https://www.maxmind.com</a>.';
 $string['iscustomadminwarnings'] = 'It has been detected that your site is using a custom admin directory. This feature is no longer supported and will be removed after Moodle 4.2.';
 $string['ishttpswarning'] = 'It has been detected that your site is not secured using HTTPS. It is strongly recommended to migrate your site to HTTPS for increased security and improved integration with other systems.';
@@ -892,8 +893,8 @@ $string['navshowmycoursecategories'] = 'Show my course categories';
 $string['navshowmycoursecategories_help'] = 'If enabled, courses in the user\'s My courses branch will be shown in categories in the navigation block (Classic-based themes only).';
 $string['navsortmycourseshiddenlast'] = 'Sort my hidden courses last';
 $string['navsortmycourseshiddenlast_help'] = 'If enabled, any hidden courses will be listed after visible courses (for users who can view hidden courses). Otherwise, all courses, regardless of their visibility, will be listed according to the \'Sort my courses\' setting.';
-$string['navsortmycoursessort'] = 'Sort my courses';
-$string['navsortmycoursessort_help'] = 'This determines whether courses are listed under My courses according to the sort order (i.e. the order set in Site administration > Courses > Manage courses and categories) or alphabetically by course setting.';
+$string['navsortmycoursessort'] = 'Order of courses in navigation block';
+$string['navsortmycoursessort_help'] = 'Should courses be listed in the sort order set in Site administration > Courses > Manage courses and categories, or alphabetically by course setting? This setting only applies to themes based on Classic.';
 $string['never'] = 'Never';
 $string['neverdeleteruns'] = 'Never delete runs';
 $string['newestdocindexed'] = 'Newest document indexed';
@@ -941,6 +942,7 @@ $string['opensslrecommended'] = 'Installing the optional OpenSSL library is high
 $string['opensslrequired'] = 'The OpenSSL PHP extension is now required by Moodle to provide stronger cryptographic services.';
 $string['opentowebcrawlers'] = 'Open to search engines';
 $string['optionalmaintenancemessage'] = 'Optional maintenance message';
+$string['oracledatabaseinuse'] = 'We are changing Oracle DB support in Moodle LMS. Moodle version 4.5 will be the last version that supports Oracle as a database architecture. Further information can be found <a href="https://moodle.org/mod/forum/discuss.php?d=456122" target="_blank">here</a>';
 $string['order1'] = 'First';
 $string['order2'] = 'Second';
 $string['order3'] = 'Third';
@@ -1251,6 +1253,8 @@ $string['sitemaintenanceon'] = 'Your site is currently in maintenance mode (only
 $string['sitemaintenanceoncli'] = 'Your site is currently in CLI maintenance mode, no web access is allowed.';
 $string['sitemaintenancewarning'] = 'Your site is currently in maintenance mode (only admins can log in).  To return this site to normal operation, <a href="maintenance.php">disable maintenance mode</a>.';
 $string['sitemaintenancewarning2'] = 'Your site is currently in maintenance mode (only admins can log in).  To return this site to normal operation, <a href="{$a}">disable maintenance mode</a>.';
+$string['sitenameintitle'] = 'Include site name in page title';
+$string['sitenameintitle_help'] = 'This setting will append the site name at the end of the page title. It is encouraged to include the site name in the page title as it will improve the site\'s accessibility by allowing users to quickly identify the page that they are currently in.';
 $string['sitepolicies'] = 'Site security settings';
 $string['sitepolicy'] = 'Site policy URL';
 $string['sitepolicy_help'] = 'The URL of the site policy that all registered users must see and agree to before accessing the site. Note that this setting will only have an effect if the site policy handler is set to default (core).';
@@ -1296,6 +1300,7 @@ $string['stickyblocksmymoodle'] = 'My Moodle';
 $string['stickyblockspagetype'] = 'Page type to configure';
 $string['strictformsrequired'] = 'Strict validation of required fields';
 $string['stripalltitletags'] = 'Remove HTML tags from all activity names';
+$string['supportandservices'] = 'Support and services';
 $string['supportcontact'] = 'Support contact';
 $string['supportemail'] = 'Support email';
 $string['supportemailsubject'] = 'Site support request - {$a}';
@@ -1449,6 +1454,8 @@ $string['unsupportedphpversion73'] = 'PHP version 7.3 and higher are not support
 $string['unsupportedphpversion74'] = 'PHP version 7.4 and higher are not supported.';
 $string['unsupportedphpversion80'] = 'PHP version 8.0 and higher are not supported.';
 $string['unsupportedphpversion81'] = 'PHP version 8.1 and higher are not supported.';
+$string['unsupportedphpversion82'] = 'PHP version 8.2 and higher are not supported.';
+$string['unsupportedphpversion83'] = 'PHP version 8.3 and higher are not supported.';
 $string['unsuspenduser'] = 'Activate user account';
 $string['updateaccounts'] = 'Update existing accounts';
 $string['updatecomponent'] = 'Update component';
