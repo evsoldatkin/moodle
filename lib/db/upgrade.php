@@ -3315,5 +3315,41 @@ privatefiles,moodle|/user/files.php';
         upgrade_main_savepoint(true, 2023042402.14);
     }
 
+    if ($oldversion < 2023042405.06) {
+        // If h5plib_v124 is no longer present, remove it.
+        if (!file_exists($CFG->dirroot . '/h5p/h5plib/v124/version.php')) {
+            // Clean config.
+            uninstall_plugin('h5plib', 'v124');
+        }
+
+        // If h5plib_v126 is present, set it as the default one.
+        if (file_exists($CFG->dirroot . '/h5p/h5plib/v126/version.php')) {
+            set_config('h5plibraryhandler', 'h5plib_v126');
+        }
+
+        upgrade_main_savepoint(true, 2023042405.06);
+    }
+
+    if ($oldversion < 2023042406.05) {
+
+        // Get all "select" custom field shortnames.
+        $fieldshortnames = $DB->get_fieldset_select('customfield_field', 'shortname', 'type = :type', ['type' => 'select']);
+
+        // Ensure any used in custom reports columns are not using integer type aggregation.
+        foreach ($fieldshortnames as $fieldshortname) {
+            $DB->execute("
+                UPDATE {reportbuilder_column}
+                   SET aggregation = NULL
+                 WHERE " . $DB->sql_like('uniqueidentifier', ':uniqueidentifier', false) . "
+                   AND aggregation IN ('avg', 'max', 'min', 'sum')
+            ", [
+                'uniqueidentifier' => '%' . $DB->sql_like_escape(":customfield_{$fieldshortname}"),
+            ]);
+        }
+
+        // Main savepoint reached.
+        upgrade_main_savepoint(true, 2023042406.05);
+    }
+
     return true;
 }

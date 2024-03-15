@@ -888,7 +888,13 @@ function initialise_fullme() {
                 throw new moodle_exception('requirecorrectaccess', 'error', '', null,
                     'You called ' . $calledurl .', you should have called ' . $correcturl);
             }
-            redirect($CFG->wwwroot, get_string('wwwrootmismatch', 'error', $CFG->wwwroot), 3);
+            $rfullpath = $rurl['fullpath'];
+            // Check that URL is under $CFG->wwwroot.
+            if (strpos($rfullpath, $wwwroot['path']) === 0) {
+                $rfullpath = substr($rurl['fullpath'], strlen($wwwroot['path']) - 1);
+                $rfullpath = (new moodle_url($rfullpath))->out(false);
+            }
+            redirect($rfullpath, get_string('wwwrootmismatch', 'error', $CFG->wwwroot), 3);
         }
     }
 
@@ -2196,7 +2202,7 @@ function require_phpunit_isolation(): void {
         return;
     }
 
-    if (defined('PHPUNIT_ISOLATED_TEST')) {
+    if (defined('PHPUNIT_ISOLATED_TEST') && PHPUNIT_ISOLATED_TEST) {
         // Already isolated.
         return;
     }

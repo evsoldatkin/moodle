@@ -786,18 +786,12 @@ function grade_get_plugin_info($courseid, $active_type, $active_plugin) {
  *
  * @param int $courseid The course ID.
  * @param int|null $groupid The group ID (optional).
+ * @param bool $onlyactiveenrol Include only active enrolments.
  * @return array $users A list of enrolled gradable users.
  */
-function get_gradable_users(int $courseid, ?int $groupid = null): array {
-    global $CFG;
-
-    $context = context_course::instance($courseid);
-    // Create a graded_users_iterator because it will properly check the groups etc.
-    $defaultgradeshowactiveenrol = !empty($CFG->grade_report_showonlyactiveenrol);
-    $onlyactiveenrol = get_user_preferences('grade_report_showonlyactiveenrol', $defaultgradeshowactiveenrol) ||
-        !has_capability('moodle/course:viewsuspendedusers', $context);
-
+function get_gradable_users(int $courseid, ?int $groupid = null, bool $onlyactiveenrol = false): array {
     $course = get_course($courseid);
+    // Create a graded_users_iterator because it will properly check the groups etc.
     $gui = new graded_users_iterator($course, null, $groupid);
     $gui->require_active_enrolment($onlyactiveenrol);
     $gui->init();
@@ -891,6 +885,12 @@ function print_grade_page_head(int $courseid, string $active_type, ?string $acti
        ?string $headerhelpcomponent = null, ?stdClass $user = null, ?action_bar $actionbar = null, $showtitle = true) {
     global $CFG, $OUTPUT, $PAGE, $USER;
 
+    if ($heading !== false) {
+        // Make sure to trim heading, including the non-breaking space character.
+        $heading = str_replace("&nbsp;", " ", $heading);
+        $heading = trim($heading);
+    }
+
     // Put a warning on all gradebook pages if the course has modules currently scheduled for background deletion.
     require_once($CFG->dirroot . '/course/lib.php');
     if (course_modules_pending_deletion($courseid, true)) {
@@ -924,14 +924,24 @@ function print_grade_page_head(int $courseid, string $active_type, ?string $acti
     }
     $coursecontext = context_course::instance($courseid);
     // Title will be constituted by information starting from the unique identifying information for the page.
-    if (in_array($active_type, ['report', 'settings'])) {
+    if ($heading) {
+        // If heading is supplied, use this for the page title.
+        $uniquetitle = $heading;
+    } else if (in_array($active_type, ['report', 'settings'])) {
+        // For grade reports or settings pages of grade plugins, use the plugin name for the unique title.
         $uniquetitle = $stractive_plugin;
+        // But if editing mode is turned on, check if the report plugin has an editing mode title string and use it if present.
+        if ($PAGE->user_is_editing() && $active_type === 'report') {
+            $strcomponent = "gradereport_{$active_plugin}";
+            if (get_string_manager()->string_exists('editingmode_title', $strcomponent)) {
+                $uniquetitle = get_string('editingmode_title', $strcomponent);
+            }
+        }
     } else {
         $uniquetitle = $stractive_type . ': ' . $stractive_plugin;
     }
     $titlecomponents = [
         $uniquetitle,
-        get_string('grades'),
         $coursecontext->get_context_name(false),
     ];
     $PAGE->set_title(implode(moodle_page::TITLE_SEPARATOR, $titlecomponents));
@@ -1051,6 +1061,12 @@ class grade_plugin_return {
      * @var int
      */
     public $page;
+    /**
+     * Search string
+     *
+     * @var string
+     */
+    public $search;
 
     /**
      * Constructor
@@ -1064,6 +1080,7 @@ class grade_plugin_return {
         $this->userid   = optional_param('gpr_userid', null, PARAM_INT);
         $this->groupid  = optional_param('gpr_groupid', null, PARAM_INT);
         $this->page     = optional_param('gpr_page', null, PARAM_INT);
+        $this->search   = optional_param('gpr_search', '', PARAM_NOTAGS);
 
         foreach ($params as $key => $value) {
             if (property_exists($this, $key)) {
@@ -1217,6 +1234,12 @@ class grade_plugin_return {
         if (!empty($this->page)) {
             $result .= '<input type="hidden" name="gpr_page" value="'.$this->page.'" />';
         }
+
+        if (!empty($this->search)) {
+            $result .= html_writer::empty_tag('input',
+                ['type' => 'hidden', 'name' => 'gpr_search', 'value' => $this->search]);
+        }
+
         return $result;
     }
 
@@ -2170,7 +2193,8 @@ class grade_structure {
                         }
 
                         $url = new moodle_url('/mod/' . $itemmodule . '/grade.php', $args);
-                        $title = get_string('advancedgrading', 'gradereport_grader', $itemmodule);
+                        $title = get_string('advancedgrading', 'gradereport_grader',
+                            get_string('pluginname', "mod_{$itemmodule}"));
                         $gpr->add_url_params($url);
                         return html_writer::link($url, $title,
                             ['class' => 'dropdown-item', 'aria-label' => $title, 'role' => 'menuitem']);
