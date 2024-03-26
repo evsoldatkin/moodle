@@ -15,11 +15,9 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template core_calendar/header
+    @template enrol_lti/local/ltiadvantage/cookies_required_notice
 
-    Calendar header.
-
-    The purpose of this template is to render the month header.
+    Displays a notice, reporting that cookies are required but couldn't be set.
 
     Classes required for JS:
     * none
@@ -27,17 +25,26 @@
     Data attributes required for JS:
     * none
 
+    Context variables required for this template:
+    * heading
+    * notification
+
     Example context (json):
     {
+        "heading": "Cookies are required",
+        "notification": {
+            "message": "You appear to be using an unsupported browser...",
+            "extraclasses": "",
+            "announce": true,
+            "closebutton": false,
+            "issuccess": false,
+            "isinfo": false,
+            "iswarning": true,
+            "iserror": false
+        }
     }
 }}
-<div class="header d-flex flex-wrap p-1">
-    {{#showviewselector}}
-        {{> core_calendar/view_selector}}
-    {{/showviewselector}}
-    {{#filter_selector}}
-        {{{filter_selector}}}
-    {{/filter_selector}}
-    {{> core_calendar/add_event_button}}
-</div>
-<div aria-live="polite" class="sr-only calendar-announcements"></div>
+<h3>{{heading}}</h3>
+{{#notification}}
+    {{> core/notification}}
+{{/notification}}
