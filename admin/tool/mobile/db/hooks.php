@@ -15,15 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Hook callbacks for Moodle app tools
  *
- * @package     mod_h5pactivity
- * @copyright   2020 Ferran Recio <ferran@moodle.com>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    tool_mobile
+ * @copyright  2024 Juan Leyva
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_h5pactivity';
-$plugin->version = 2023100901;
-$plugin->requires = 2023100400;
+$callbacks = [
+    [
+        'hook' => core\hook\user\after_complete_login::class,
+        'callback' => 'tool_mobile\local\hooks\user\after_complete_login::callback',
+        'priority' => 500,
+    ],
+    [
+        'hook' => tool_mfa\hook\after_user_passed_mfa::class,
+        'callback' => 'tool_mobile\local\hooks\user\after_user_passed_mfa::callback',
+        'priority' => 500,
+    ],
+];
