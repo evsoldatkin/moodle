@@ -14,16 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace auth_lti\local\ltiadvantage\event;
+namespace tool_mobile;
 
-use auth_lti\local\ltiadvantage\utility\cookie_helper;
+use core\session\utility\cookie_helper;
 use core\event\user_loggedin;
 
 /**
- * Event handler for auth_lti.
+ * Event handler for tool_mobile.
  *
- * @package    auth_lti
- * @copyright  2024 Jake Dallimore <jrhdallimore@gmail.com>
+ * @package    tool_mobile
+ * @copyright  2024 Juan Leyva
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class event_handler {
@@ -35,14 +35,11 @@ class event_handler {
      * @return void
      */
     public static function handle_user_loggedin(user_loggedin $event): void {
-        // The event data isn't important here. The intent of this listener is to ensure that the MoodleSession cookie is set up
-        // properly during LTI launches + login. This means two things:
-        // i) it's set with SameSite=None; Secure; where possible (since OIDC needs HTTPS this will almost always be possible).
-        // ii) it set with the 'Partitioned' attribute, when required.
-        // The former ensures cross-site cookies are sent for embedded launches. The latter is an opt-in flag needed to use Chrome's
-        // partitioning mechanism, CHIPS.
-        if (cookie_helper::cookies_supported()) {
-            cookie_helper::setup_session_cookie();
+        global $CFG;
+
+        // Set Partitioned and Secure attributes to the MoodleSession cookie if the user is using the Moodle app.
+        if (\core_useragent::is_moodle_app()) {
+            cookie_helper::add_attributes_to_cookie_response_header('MoodleSession'.$CFG->sessioncookie, ['Secure', 'Partitioned']);
         }
     }
 }
