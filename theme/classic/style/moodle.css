@@ -23204,12 +23204,8 @@ a.autolink.glossary:hover {
   display: none;
 }
 
-.visibleifjs {
+body:not(.jsenabled) .visibleifjs {
   display: none;
-}
-
-.jsenabled .visibleifjs {
-  display: inline;
 }
 
 .jsenabled .collapsibleregion {
@@ -24968,6 +24964,10 @@ a.disabled {
   color: #6a737b;
 }
 
+a.btn.disabled {
+  opacity: 1;
+}
+
 body.lockscroll {
   height: 100%;
   overflow: hidden;
@@ -25160,6 +25160,8 @@ h3.sectionname .inplaceeditable.inplaceeditingon .editinstructions {
 .footer-dark a {
   color: #fff;
   text-decoration: underline;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
 }
 .footer-dark a .icon {
   color: #fff;
