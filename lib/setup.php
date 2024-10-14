@@ -620,12 +620,8 @@ if (!empty($_SERVER['HTTP_X_moz']) && $_SERVER['HTTP_X_moz'] === 'prefetch'){
 //the problem is that we need specific version of quickforms and hacked excel files :-(
 ini_set('include_path', $CFG->libdir.'/pear' . PATH_SEPARATOR . ini_get('include_path'));
 
-// Register our classloader, in theory somebody might want to replace it to load other hacked core classes.
-if (defined('COMPONENT_CLASSLOADER')) {
-    spl_autoload_register(COMPONENT_CLASSLOADER);
-} else {
-    spl_autoload_register('core_component::classloader');
-}
+// Register our classloader.
+\core_component::register_autoloader();
 
 // Remember the default PHP timezone, we will need it later.
 core_date::store_default_php_timezone();
@@ -680,19 +676,29 @@ if (PHPUNIT_TEST and !PHPUNIT_UTIL) {
 }
 
 // Load any immutable bootstrap config from local cache.
-$bootstrapcachefile = $CFG->localcachedir . '/bootstrap.php';
-if (is_readable($bootstrapcachefile)) {
+$bootstraplocalfile = $CFG->localcachedir . '/bootstrap.php';
+$bootstrapsharedfile = $CFG->cachedir . '/bootstrap.php';
+
+if (!is_readable($bootstraplocalfile) && is_readable($bootstrapsharedfile)) {
+    // If we don't have a local cache but do have a shared cache then clone it,
+    // for example when scaling up new front ends.
+    make_localcache_directory('', true);
+    copy($bootstrapsharedfile, $bootstraplocalfile);
+}
+if (is_readable($bootstraplocalfile)) {
     try {
-        require_once($bootstrapcachefile);
+        require_once($bootstraplocalfile);
         // Verify the file is not stale.
         if (!isset($CFG->bootstraphash) || $CFG->bootstraphash !== hash_local_config_cache()) {
             // Something has changed, the bootstrap.php file is stale.
             unset($CFG->siteidentifier);
-            @unlink($bootstrapcachefile);
+            @unlink($bootstraplocalfile);
+            @unlink($bootstrapsharedfile);
         }
     } catch (Throwable $e) {
         // If it is corrupted then attempt to delete it and it will be rebuilt.
-        @unlink($bootstrapcachefile);
+        @unlink($bootstraplocalfile);
+        @unlink($bootstrapsharedfile);
     }
 }
 

@@ -342,8 +342,8 @@ $string['country'] = 'Country';
 $string['course'] = 'Course';
 $string['courseheader'] = 'Course menu';
 $string['courseadministration'] = 'Course administration';
-$string['courseapprovedemail'] = 'Your requested course, {$a->name}, has been approved and you have been made a {$a->teacher}.  To access your new course, go to {$a->url}';
-$string['courseapprovedemail2'] = 'Your requested course, {$a->name}, has been approved.  To access your new course, go to {$a->url}';
+$string['courseapprovedemail'] = 'Your requested course is approved, <a href="{$a->url}">{$a->name}</a>, and you are a {$a->teacher}.';
+$string['courseapprovedemail2'] = 'Your requested course is approved: <a href="{$a->url}">{$a->name}</a>.';
 $string['courseapprovedfailed'] = 'Failed to save the course as approved!';
 $string['courseapprovedsubject'] = 'Your course has been approved!';
 $string['courseavailable'] = 'This course is available to students';
@@ -700,7 +700,7 @@ $string['emailcharset'] = 'Email charset';
 $string['emailmustbereal'] = 'Note: your email address must be a real one';
 $string['emailnotallowed'] = 'Email addresses in these domains are not allowed ({$a})';
 $string['emailnotfound'] = 'The email address was not found in the database';
-$string['emailonlyallowed'] = 'This email is not one of those that are allowed ({$a})';
+$string['emailonlyallowed'] = 'This email cannot be used. Allowed email domains are: {$a}.';
 $string['emailpasswordconfirmation'] = 'Hi {$a->firstname},
 
 Someone (probably you) has requested a new password for your
@@ -1520,22 +1520,17 @@ $string['newusernewpasswordtext'] = 'Hi {$a->firstname},
 A new account has been created for you at \'{$a->sitename}\'
 and you have been issued with a new temporary password.
 
-Your current login information is now:
+Your login information is:
    username: {$a->username}
    password: {$a->newpassword}
              (you will have to change your password
-              when you login for the first time)
+              when you log in for the first time)
 
-To start using \'{$a->sitename}\', login at
+To start using \'{$a->sitename}\', log in at
    {$a->link}
 
-In most mail programs, this should appear as a blue link
-which you can just click on.  If that doesn\'t work,
-then cut and paste the address into the address
-line at the top of your web browser window.
-
-Cheers from the \'{$a->sitename}\' administrator,
-{$a->signoff}';
+If you need help, you can contact the site administrator,
+{$a->admin}';
 $string['newusers'] = 'New users';
 $string['newwindow'] = 'New window';
 $string['next'] = 'Next';
@@ -1708,7 +1703,7 @@ $string['pluginsetup'] = 'Setting up plugin tables';
 $string['policyaccept'] = 'I understand and agree';
 $string['policyagree'] = 'You must agree to this policy to continue using this site.  Do you agree?';
 $string['policyagreement'] = 'Site policy agreement';
-$string['policyagreementclick'] = 'Link to site policy agreement';
+$string['policyagreementclick'] = 'Site policy agreement';
 $string['popup'] = 'popup';
 $string['popupwindow'] = 'Open file in new window';
 $string['popupwindowname'] = 'Popup window';
@@ -2404,7 +2399,7 @@ $string['welcometocoursetext'] = 'Welcome to {$a->coursename}!
 
 If you have not done so already, you should edit your profile page so that we can learn more about you:
 
-<a href="{$a->profileurl}">{$a->profileurl}<a>';
+<a href="{$a->profileurl}">{$a->profileurl}</a>';
 $string['whatforlink'] = 'What do you want to do with the link?';
 $string['whatforpage'] = 'What do you want to do with the text?';
 $string['whatisyourage'] = 'What is your age?';

@@ -217,7 +217,7 @@ function user_update_user($user, $updatepassword = true, $triggerevent = true) {
         if (!property_exists($currentrecord, $attributekey) || $attributekey === 'timemodified') {
             continue;
         }
-        if ($currentrecord->{$attributekey} != $attributevalue) {
+        if ($currentrecord->{$attributekey} !== $attributevalue) {
             $changedattributes[$attributekey] = $attributevalue;
         }
     }
@@ -558,10 +558,13 @@ function user_get_user_details($user, $course = null, array $userfields = array(
                     }
                 }
 
+                $groupdescription = file_rewrite_pluginfile_urls($group->description, 'pluginfile.php', $context->id, 'group',
+                    'description', $group->id);
+
                 $userdetails['groups'][] = [
                     'id' => $group->id,
-                    'name' => format_string($group->name),
-                    'description' => format_text($group->description, $group->descriptionformat, ['context' => $context]),
+                    'name' => format_string($group->name, true, ['context' => $context]),
+                    'description' => format_text($groupdescription, $group->descriptionformat, ['context' => $context]),
                     'descriptionformat' => $group->descriptionformat
                 ];
             }
