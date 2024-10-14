@@ -380,16 +380,8 @@ define ('BLOG_COURSE_LEVEL', 3);
 define ('BLOG_SITE_LEVEL', 4);
 define ('BLOG_GLOBAL_LEVEL', 5);
 
-
-// Tag constants.
-/**
- * To prevent problems with multibytes strings,Flag updating in nav not working on the review page. this should not exceed the
- * length of "varchar(255) / 3 (bytes / utf-8 character) = 85".
- * TODO: this is not correct, varchar(255) are 255 unicode chars ;-)
- *
- * @todo define(TAG_MAX_LENGTH) this is not correct, varchar(255) are 255 unicode chars ;-)
- */
-define('TAG_MAX_LENGTH', 50);
+/** The maximum length of a tag */
+define('TAG_MAX_LENGTH', 255);
 
 // Password policy constants.
 define ('PASSWORD_LOWER', 'abcdefghijklmnopqrstuvwxyz');
@@ -1753,6 +1745,9 @@ function purge_other_caches() {
     remove_dir($CFG->localcachedir, true);
     set_config('localcachedirpurged', time());
     make_localcache_directory('', true);
+
+    // Rewarm the bootstrap.php files so the siteid is always present after a purge.
+    initialise_local_config_cache();
     \core\task\manager::clear_static_caches();
 }
 
@@ -7954,11 +7949,12 @@ function get_plugins_with_function($function, $file = 'lib.php', $include = true
         foreach ($pluginfunctions as $plugintype => $plugins) {
             foreach ($plugins as $plugin => $unusedfunction) {
                 $component = $plugintype . '_' . $plugin;
-                if (\core\hook\manager::get_instance()->is_deprecated_plugin_callback($plugincallback)) {
-                    if (\core\hook\manager::get_instance()->is_deprecating_hook_present($component, $plugincallback)) {
+                $hookmanager = \core\hook\manager::get_instance();
+                if ($hooks = $hookmanager->get_hooks_deprecating_plugin_callback($plugincallback)) {
+                    if ($hookmanager->is_deprecating_hook_present($component, $plugincallback)) {
                         // Ignore the old callback, it is there only for older Moodle versions.
                         unset($pluginfunctions[$plugintype][$plugin]);
-                    } else {
+                    } else if ($hookmanager->warn_on_unmigrated_legacy_hooks()) {
                         debugging("Callback $plugincallback in $component component should be migrated to new hook callback",
                             DEBUG_DEVELOPER);
                     }
@@ -8200,12 +8196,13 @@ function component_callback($component, $function, array $params = array(), $def
 
     if ($functionname) {
         if ($migratedtohook) {
-            if (\core\hook\manager::get_instance()->is_deprecated_plugin_callback($function)) {
-                if (\core\hook\manager::get_instance()->is_deprecating_hook_present($component, $function)) {
+            $hookmanager = \core\hook\manager::get_instance();
+            if ($hookmanager->is_deprecated_plugin_callback($function)) {
+                if ($hookmanager->is_deprecating_hook_present($component, $function)) {
                     // Do not call the old lib.php callback,
                     // it is there for compatibility with older Moodle versions only.
                     return null;
-                } else {
+                } else if ($hookmanager->warn_on_unmigrated_legacy_hooks()) {
                     debugging("Callback $function in $component component should be migrated to new hook callback",
                         DEBUG_DEVELOPER);
                 }

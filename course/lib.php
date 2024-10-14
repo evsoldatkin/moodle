@@ -2562,6 +2562,12 @@ function update_course($data, $editoroptions = NULL) {
         // Newly created providers complete the user mapping but do not queue the task
         // (it will be handled by the room creation task).
         if ($addusersrequired) {
+            // Ensure only active users are added to the room.
+            $activeusers = array_column(
+                enrol_get_course_users(courseid: $data->id, onlyactive: true),
+                'id',
+            );
+            $enrolledusers = array_intersect($activeusers, $enrolledusers);
             $communication->add_members_to_room($enrolledusers, $instanceexists);
         }
     }
@@ -3346,7 +3352,11 @@ function include_course_editor(course_format $format) {
 function get_sorted_course_formats($enabledonly = false) {
     global $CFG;
 
-    $formats = core_plugin_manager::instance()->get_installed_plugins('format');
+    // Include both formats that exist on disk (but might not have been installed yet), and those
+    // which were installed but no longer exist on disk.
+    $installedformats = core_plugin_manager::instance()->get_installed_plugins('format');
+    $existingformats = core_component::get_plugin_list('format');
+    $formats = array_merge($installedformats, $existingformats);
 
     if (!empty($CFG->format_plugins_sortorder)) {
         $order = explode(',', $CFG->format_plugins_sortorder);
