@@ -144,13 +144,13 @@ class MoodleExcelWorkbook {
     }
     
     //Core Fix Start
-    public function closefile(string $dir)
+    public function closefile()
     {
         foreach ($this->objspreadsheet->getAllSheets() as $sheet)
             $sheet->setSelectedCells('A1');
         $this->objspreadsheet->setActiveSheetIndex(0);
         $objwriter = IOFactory::createWriter($this->objspreadsheet, $this->type);
-        $objwriter->save($dir.'/'.$filename);
+        $objwriter->save($this->filename);
     }
     //Core Fix Finish
 
