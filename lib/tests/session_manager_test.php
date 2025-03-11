@@ -24,7 +24,7 @@ namespace core;
  * @copyright  2013 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class session_manager_test extends \advanced_testcase {
+final class session_manager_test extends \advanced_testcase {
     public function test_start(): void {
         $this->resetAfterTest();
         // Session must be started only once...
@@ -501,12 +501,14 @@ class session_manager_test extends \advanced_testcase {
         $record->timemodified = time() - 60*20;
         $r2 = $DB->insert_record('sessions', $record);
 
+        // Guest session still within the session timeout limit.
         $record->sid          = md5('hokus3');
         $record->userid       = $guestid;
         $record->timecreated  = time() - 60*60*60;
-        $record->timemodified = time() - 60*20;
+        $record->timemodified = time() - 60*5;
         $r3 = $DB->insert_record('sessions', $record);
 
+        // Guest session outside the session timeout limit.
         $record->sid          = md5('hokus4');
         $record->userid       = $guestid;
         $record->timecreated  = time() - 60*60*60;
