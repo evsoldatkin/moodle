@@ -2694,6 +2694,11 @@ class mod_assign_external extends \mod_assign\external\external_api {
             if ($prefs)
             {
                 $temp_prefs = json_decode($prefs, true);
+                if (!isset($temp_prefs['collapse']))
+                    $temp_prefs['collapse'] = [];
+                if (!isset($temp_prefs['sortby']))
+                    $temp_prefs['sortby'] = [];
+                $prefs = json_encode($temp_prefs);
                 $temp_prefs['i_first'] = '';
                 $temp_prefs['i_last'] = '';
                 set_user_preference('flextable_mod_assign_grading'.'-'.$context->id, json_encode($temp_prefs));

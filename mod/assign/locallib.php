@@ -2697,7 +2697,10 @@ class assign {
             return $SESSION->mod_assign_useridlist[$useridlistkey];
         }
         $filter = get_user_preferences('assign_filter', '');
-        $table = new assign_grading_table($this, 0, $filter, 0, false);
+        //Core Fix Start
+        //$table = new assign_grading_table($this, 0, $filter, 0, false);
+        $table = new assign_grading_table($this, 0, null, 0, false);
+        //Core Fix Finish
 
         $useridlist = $table->get_column_data('userid');
 
