@@ -277,6 +277,11 @@ class scanner extends \core\antivirus\scanner {
 
                 // Actual scan.
                 fwrite($socket, "nSCAN ".$file."\n");
+                // Core Fix Start
+                $timeout = \get_config('local_core', 'clamav_timeout');
+                if ($timeout)
+                    stream_set_timeout($socket, $timeout);
+                // Core Fix Finish
                 // Get ClamAV answer.
                 $output = stream_get_line($socket, 4096);
 
