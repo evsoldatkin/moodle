@@ -27728,7 +27728,7 @@ dd:after {
   color: #1d2125;
 }
 
-.btn-footer-popover {
+.footer-popover .btn-footer-popover {
   display: none;
   position: fixed;
   bottom: 2rem;
@@ -29598,6 +29598,14 @@ img.icon {
 .block .block-controls .dropdown-toggle::after {
   display: none;
 }
+.block .block-controls .dropdown-menu {
+  max-width: 500px;
+}
+.block .block-controls .dropdown-menu .dropdown-item {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 [data-region=blocks-column] {
   width: 360px;
@@ -29797,6 +29805,10 @@ aside[id^=block-region-side-] .block_recentlyaccesseditems .card:nth-of-type(n+4
 
 .block_timeline .event-action {
   padding-left: 5.55em;
+}
+
+.block_timeline .dropdown-menu .dropdown-item {
+  padding-left: 1.5rem;
 }
 
 .block_settings .block_tree [aria-expanded=true],
@@ -38940,7 +38952,7 @@ span[data-flexitour=container][x-placement=right] div[data-role=arrow]:after, sp
   transform: translate(-50%, -50%);
 }
 .modal .btn-close {
-  margin: -0.8rem -0.8rem -0.8rem auto;
+  margin: -0.4rem -0.4rem -0.4rem auto;
 }
 .modal .btn-close:not(:disabled):not(.disabled):hover, .modal .btn-close:not(:disabled):not(.disabled):focus {
   opacity: inherit;
