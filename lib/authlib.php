@@ -1152,6 +1152,10 @@ function signup_validate_data($data, $files) {
     global $CFG, $DB;
 
     $errors = array();
+    //Core Fix Start
+    require_once $CFG->dirroot.'/local/core/config.php';
+    $data = \local_core\Fix::signup_validate_data($data);
+    //Core Fix Finish
     $authplugin = get_auth_plugin($CFG->registerauth);
 
     if ($DB->record_exists('user', array('username' => $data['username'], 'mnethostid' => $CFG->mnet_localhost_id))) {
