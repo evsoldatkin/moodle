@@ -280,6 +280,33 @@ final class question_bank_helper_test extends \advanced_testcase {
     }
 
     /**
+     * Create a default instance, passing a multibyte-character name.
+     *
+     * The name has more bytes than the max length, but is within the character limit as they are multibyte characters.
+     */
+    public function test_create_default_open_instance_with_multibyte_name(): void {
+        $this->resetAfterTest();
+        self::setAdminUser();
+
+        $coursename = '';
+        while (strlen($coursename) < question_bank_helper::BANK_NAME_MAX_LENGTH) {
+            $coursename .= '🙂';
+        }
+        $course = self::getDataGenerator()->create_course(['shortname' => '🙂']);
+        $bankname = get_string('defaultbank', 'core_question', ['coursename' => $coursename]);
+        $this->assertTrue(strlen($bankname) > question_bank_helper::BANK_NAME_MAX_LENGTH);
+        $this->assertTrue(\core_text::strlen($bankname) < question_bank_helper::BANK_NAME_MAX_LENGTH);
+
+        question_bank_helper::create_default_open_instance($course, $bankname);
+
+        $modinfo = get_fast_modinfo($course);
+        $cminfos = $modinfo->get_instances_of('qbank');
+        $this->assertCount(1, $cminfos);
+        $cminfo = reset($cminfos);
+        $this->assertEquals($bankname, $cminfo->get_name());
+    }
+
+    /**
      * Assert that viewing a question bank logs the view for that user up to a maximum of 5 unique bank views.
      *
      * @return void
@@ -385,6 +412,24 @@ final class question_bank_helper_test extends \advanced_testcase {
         $qbank = question_bank_helper::get_default_open_instance_system_type($course);
         $this->assertNull($qbank);
         $qbank = question_bank_helper::get_default_open_instance_system_type($course, true);
+        $this->assertEquals(get_string('systembank', 'question'), $qbank->get_name());
+        $modrecord = $DB->get_record('qbank', ['id' => $qbank->instance]);
+        $this->assertEquals(question_bank_helper::TYPE_SYSTEM, $modrecord->type);
+        // Create module other than a qbank with an ID that isn't used by a qbank yet.
+        do {
+            $wiki = self::getDataGenerator()->create_module('wiki', [
+                'course' => $course->id,
+            ]);
+        } while ($DB->record_exists('qbank', ['id' => $wiki->id]));
+        // Swap the qbank instance record for one with the same ID as the wiki instance.
+        $newqbank = clone($modrecord);
+        $newqbank->id = $wiki->id;
+        $DB->insert_record_raw('qbank', $newqbank, customsequence: true);
+        $DB->delete_records('qbank', ['id' => $qbank->id]);
+        $DB->set_field('course_modules', 'instance', $newqbank->id, ['instance' => $qbank->instance]);
+        // Retry the above again.
+        \course_modinfo::purge_course_caches([$course->id]);
+        $qbank = question_bank_helper::get_default_open_instance_system_type($course);
         $this->assertEquals(get_string('systembank', 'question'), $qbank->get_name());
         $modrecord = $DB->get_record('qbank', ['id' => $qbank->instance]);
         $this->assertEquals(question_bank_helper::TYPE_SYSTEM, $modrecord->type);
