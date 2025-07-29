@@ -339,6 +339,7 @@ class question_bank_helper {
         int $userid,
         int $notincourseid = 0,
         ?context $filtercontext = null,
+        array $havingcap = [],
     ): array {
         $prefs = get_user_preferences(self::RECENTLY_VIEWED, null, $userid);
         $contextids = !empty($prefs) ? explode(',', $prefs) : [];
@@ -358,6 +359,9 @@ class question_bank_helper {
             }
             [, $cm] = get_module_from_cmid($context->instanceid);
             if (!empty($notincourseid) && $notincourseid == $cm->course) {
+                continue;
+            }
+            if (!empty($havingcap) && !(new question_edit_contexts($context))->have_one_cap($havingcap)) {
                 continue;
             }
             $record = self::get_formatted_bank($cm, filtercontext: $filtercontext);
@@ -644,7 +648,8 @@ class question_bank_helper {
     public static function has_bank_migration_task_completed_successfully(): bool {
         $defaultbank = self::get_default_question_bank_activity_name();
         $task = manager::get_adhoc_tasks("\\mod_{$defaultbank}\\task\\transfer_question_categories");
-        return empty($task);
+        $subtasks = manager::get_adhoc_tasks("\\mod_{$defaultbank}\\task\\transfer_questions");
+        return empty($task) && empty($subtasks);
     }
 
     /**
