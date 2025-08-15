@@ -1,6 +1,12 @@
 # core (subsystem) Upgrade notes
 
-## 5.0.1+
+## 5.0.2
+
+### Added
+
+- Add a new method has_valid_group in \core\report_helper that will return true or false depending if the user has a valid group. This is mainly false in case the user is not in any group in SEPARATEGROUPS. Used in report_log and report_loglive
+
+  For more information see [MDL-84464](https://tracker.moodle.org/browse/MDL-84464)
 
 ### Changed
 
