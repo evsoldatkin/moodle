@@ -1261,6 +1261,9 @@ function signup_setup_new_user($user) {
     // Initialize alternate name fields to empty strings.
     $namefields = array_diff(\core_user\fields::get_name_fields(), useredit_get_required_name_fields());
     foreach ($namefields as $namefield) {
+        //Core Fix Start
+        if (!isset($user->$namefield))
+        //Core Fix Finish
         $user->$namefield = '';
     }
     return $user;
