@@ -44,7 +44,9 @@ table {
         td,
         th {
             color: inherit;
+            /*Core Fix Start
             background-color: inherit;
+            Core Fix Finish*/
         }
     }
     // Fix hover styling for table rows.
