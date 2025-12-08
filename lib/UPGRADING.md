@@ -1,6 +1,12 @@
 # core (subsystem) Upgrade notes
 
-## 5.0.3+
+## 5.0.4
+
+### Added
+
+- Added clean_string() that prevents double escaping in Mustache templates
+
+  For more information see [MDL-87066](https://tracker.moodle.org/browse/MDL-87066)
 
 ### Changed
 
