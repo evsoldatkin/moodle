@@ -38,6 +38,11 @@
     <div class="hidden" data-region="content-container">
         {{> core_message/message_drawer_view_settings_body_content }}
     </div>
+    {{! Core Fix Start }}
+    <a class="btn btn-warning btn-block text-white" href="{{config.wwwroot}}/local/core/ajax.php?_action=mark_all_messages_as_read">
+        {{#str}}mark_all_messages_as_read, local_core{{/str}}
+    </a>
+    {{! Core Fix Finish }}
     <div data-region="placeholder-container">
         {{> core_message/message_drawer_view_settings_body_placeholder }}
     </div>
