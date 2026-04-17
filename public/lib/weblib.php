@@ -1092,11 +1092,6 @@ function purify_html($text, $options = array()) {
 
     // Add revision number and all options to the text key so that it is compatible with local cluster node caches.
     $key = "|$version|$allowobjectembed|$allowid|$text";
-    //Core Fix Start
-    if (\core\session\manager::is_loggedinas())
-        $filteredtext = false;
-    else
-    //Core Fix Finish
     $filteredtext = $cache->get($key);
 
     if ($filteredtext === true) {
@@ -1217,9 +1212,6 @@ function purify_html($text, $options = array()) {
         $filteredtext = preg_replace('/<span xxxlang="([a-zA-Z0-9_-]+)">/', '<span lang="${1}" class="multilang">', $filteredtext);
     }
 
-    //Core Fix Start
-    if (!\core\session\manager::is_loggedinas())
-    //Core Fix Finish
     if ($text === $filteredtext) {
         // No need to store the filtered text, next time we will just return unfiltered text
         // because it was not changed by purifying.
