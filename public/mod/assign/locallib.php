@@ -4961,6 +4961,7 @@ class assign {
                             'icon' => $operation->icon,
                             'confirmationtitle' => $operation->confirmationtitle,
                             'confirmationquestion' => $operation->confirmationquestion,
+                            'confirmationyes' => $operation->confirmationyes ?? get_string('savechanges'),
                         ];
                     }
                 }
