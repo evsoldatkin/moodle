@@ -314,9 +314,12 @@ function rebuild_course_cache(int $courseid = 0, bool $clearonly = false, bool $
         }
     }
     //Core Fix Start
-    global $CFG;
-    require_once $CFG->dirroot.'/local/core/config.php';
-    \local_core\Course::CacheReset($courseid);
+    if (!during_initial_install())
+    {
+        global $CFG;
+        require_once $CFG->dirroot.'/local/core/config.php';
+        \local_core\Course::CacheReset($courseid);
+    }
     //Core Fix Finish
 
     if ($clearonly) {
